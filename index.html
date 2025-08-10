@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đố vui Thuật ngữ Kinh tế</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .question-box {
+            background-color: #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        .answer-list li {
+            padding: 12px;
+            margin-bottom: 8px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+        }
+        .answer-list li:hover:not(.correct):not(.incorrect) {
+            background-color: #eef2ff;
+        }
+        .answer-list li.correct {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-weight: bold;
+        }
+        .answer-list li.incorrect {
+            background-color: #fee2e2;
+            color: #991b1b;
+            font-weight: bold;
+        }
+        .btn-next {
+            background-color: #4f46e5;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-next:hover {
+            background-color: #4338ca;
+        }
+        .results-box {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 24px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #4f46e5;
+            transition: width 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-8">
+    <div class="quiz-container">
+        <h1 class="text-3xl font-bold text-center text-indigo-700 mb-6">Đố vui Thuật ngữ Kinh tế</h1>
+        <div class="progress-bar">
+            <div id="progressBar" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <p class="text-center text-sm text-gray-500 mb-4" id="progressText">Câu hỏi 1 / 19</p>
+        <div id="questionContainer" class="mb-6">
+            <!-- Câu hỏi sẽ được hiển thị tại đây -->
+        </div>
+        <div id="results" class="hidden">
+            <!-- Kết quả sẽ được hiển thị tại đây -->
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                term: "热点",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Nhu cầu", isCorrect: false },
+                    { text: "Điểm nóng", isCorrect: true },
+                    { text: "Yếu tố", isCorrect: false },
+                    { text: "Dữ liệu", isCorrect: false }
+                ]
+            },
+            {
+                term: "能源",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Kim loại", isCorrect: false },
+                    { text: "Năng lượng", isCorrect: true },
+                    { text: "Nguyên liệu", isCorrect: false },
+                    { text: "Khoáng sản", isCorrect: false }
+                ]
+            },
+            {
+                term: "持续",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Thúc đẩy", isCorrect: false },
+                    { text: "Liên tục / Duy trì", isCorrect: true },
+                    { text: "Ngày càng", isCorrect: false },
+                    { text: "Dự đoán", isCorrect: false }
+                ]
+            },
+            {
+                term: "替代",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Thay thế", isCorrect: true },
+                    { text: "Thống kê", isCorrect: false },
+                    { text: "Tồn tại", isCorrect: false },
+                    { text: "Gia công", isCorrect: false }
+                ]
+            },
+            {
+                term: "矿产品",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Nguyên liệu", isCorrect: false },
+                    { text: "Năng lượng", isCorrect: false },
+                    { text: "Khoáng sản", isCorrect: true },
+                    { text: "Kim loại", isCorrect: false }
+                ]
+            },
+            {
+                term: "铁矿石",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Quặng nhôm", isCorrect: false },
+                    { text: "Quặng sắt", isCorrect: true },
+                    { text: "Kim loại", isCorrect: false },
+                    { text: "Đá vôi", isCorrect: false }
+                ]
+            },
+            {
+                term: "预测",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Tính toán", isCorrect: false },
+                    { text: "Dự đoán / Dự báo", isCorrect: true },
+                    { text: "Phân tích", isCorrect: false },
+                    { text: "Kết luận", isCorrect: false }
+                ]
+            },
+            {
+                term: "金属",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Quặng", isCorrect: false },
+                    { text: "Kim loại", isCorrect: true },
+                    { text: "Khoáng chất", isCorrect: false },
+                    { text: "Hóa chất", isCorrect: false }
+                ]
+            },
+            {
+                term: "原料",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Sản phẩm", isCorrect: false },
+                    { text: "Năng lượng", isCorrect: false },
+                    { text: "Nguyên liệu", isCorrect: true },
+                    { text: "Bán thành phẩm", isCorrect: false }
+                ]
+            },
+            {
+                term: "拉动",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Kìm hãm", isCorrect: false },
+                    { text: "Thúc đẩy", isCorrect: true },
+                    { text: "Đẩy lùi", isCorrect: false },
+                    { text: "Gia tăng", isCorrect: false }
+                ]
+            },
+            {
+                term: "因素",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Nguyên nhân", isCorrect: true },
+                    { text: "Hậu quả", isCorrect: false },
+                    { text: "Chủ đề", isCorrect: false },
+                    { text: "Kết quả", isCorrect: false }
+                ]
+            },
+            {
+                term: "需求",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Thống kê", isCorrect: false },
+                    { text: "Nhu cầu", isCorrect: true },
+                    { text: "Sản xuất", isCorrect: false },
+                    { text: "Cung cấp", isCorrect: false }
+                ]
+            },
+            {
+                term: "耕地",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Đất hoang", isCorrect: false },
+                    { text: "Đất ở", isCorrect: false },
+                    { text: "Đất công nghiệp", isCorrect: false },
+                    { text: "Đất canh tác", isCorrect: true }
+                ]
+            },
+            {
+                term: "日益",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Ngày càng", isCorrect: true },
+                    { text: "Liên tục", isCorrect: false },
+                    { text: "Dần dần", isCorrect: false },
+                    { text: "Đột ngột", isCorrect: false }
+                ]
+            },
+            {
+                term: "统计",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Thống kê", isCorrect: true },
+                    { text: "Thanh toán", isCorrect: false },
+                    { text: "Điều tra", isCorrect: false },
+                    { text: "Đàm phán", isCorrect: false }
+                ]
+            },
+            {
+                term: "数据",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Số liệu / Dữ liệu", isCorrect: true },
+                    { text: "Báo cáo", isCorrect: false },
+                    { text: "Sản phẩm", isCorrect: false },
+                    { text: "Nguyên liệu", isCorrect: false }
+                ]
+            },
+            {
+                term: "谷物",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Rau củ", isCorrect: false },
+                    { text: "Trái cây", isCorrect: false },
+                    { text: "Ngũ cốc", isCorrect: true },
+                    { text: "Thực phẩm", isCorrect: false }
+                ]
+            },
+            {
+                term: "加工贸易",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Thương mại dịch vụ", isCorrect: false },
+                    { text: "Thương mại gia công", isCorrect: true },
+                    { text: "Thương mại quốc tế", isCorrect: false },
+                    { text: "Thương mại tự do", isCorrect: false }
+                ]
+            },
+            {
+                term: "劳动力",
+                question: "Thuật ngữ này có nghĩa là gì?",
+                answers: [
+                    { text: "Nhân viên", isCorrect: false },
+                    { text: "Sức lao động / Lực lượng lao động", isCorrect: true },
+                    { text: "Nông dân", isCorrect: false },
+                    { text: "Công nhân", isCorrect: false }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = questions.length;
+        const pointsPerQuestion = 100 / totalQuestions;
+        let isAnswered = false;
+
+        const questionContainer = document.getElementById('questionContainer');
+        const resultsContainer = document.getElementById('results');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadQuestion() {
+            isAnswered = false;
+            questionContainer.innerHTML = '';
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            progressText.textContent = `Câu hỏi ${currentQuestionIndex + 1} / ${totalQuestions}`;
+
+            const questionBox = document.createElement('div');
+            questionBox.className = 'question-box';
+            questionBox.innerHTML = `
+                <p><strong>${currentQuestion.term}</strong></p>
+                <p class="mt-2">${currentQuestion.question}</p>
+            `;
+            questionContainer.appendChild(questionBox);
+
+            const answersList = document.createElement('ul');
+            answersList.className = 'answer-list';
+            shuffle(currentQuestion.answers);
+            currentQuestion.answers.forEach(answer => {
+                const listItem = document.createElement('li');
+                listItem.textContent = answer.text;
+                listItem.onclick = () => selectAnswer(listItem, answer.isCorrect);
+                answersList.appendChild(listItem);
+            });
+            questionContainer.appendChild(answersList);
+        }
+
+        function selectAnswer(selectedItem, isCorrect) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const answersList = selectedItem.parentElement.children;
+            for (let item of answersList) {
+                if (item.classList.contains('correct') || item.classList.contains('incorrect')) {
+                    item.classList.remove('hover:bg-blue-100');
+                    item.style.cursor = 'default';
+                }
+            }
+
+            if (isCorrect) {
+                selectedItem.classList.add('correct');
+                score += pointsPerQuestion;
+            } else {
+                selectedItem.classList.add('incorrect');
+                const correctItem = Array.from(answersList).find(item => {
+                    const answerText = questions[currentQuestionIndex].answers.find(a => a.text === item.textContent);
+                    return answerText && answerText.isCorrect;
+                });
+                if (correctItem) {
+                    correctItem.classList.add('correct');
+                }
+            }
+            
+            progressBar.style.width = `${((currentQuestionIndex + 1) / totalQuestions) * 100}%`;
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < totalQuestions) {
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
+        }
+
+        function showResults() {
+            questionContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            const finalScore = Math.round(score);
+            resultsContainer.innerHTML = `
+                <div class="results-box text-3xl text-indigo-700">
+                    <p>Kết thúc trò chơi!</p>
+                    <p class="mt-4">Tổng điểm của bạn là: ${finalScore}</p>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadQuestion);
+    </script>
+</body>
+</html>
